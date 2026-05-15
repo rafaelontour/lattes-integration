@@ -1,0 +1,13 @@
+[project]
+name = "pipeline-etl"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "notebook>=7.5.6",
+    "polars>=1.40.1",
+    "prefect>=3.7.0",
+    "pyarrow>=24.0.0",
+    "requests>=2.34.2",
+]
