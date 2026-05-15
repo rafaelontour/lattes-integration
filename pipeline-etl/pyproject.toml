@@ -12,4 +12,5 @@ dependencies = [
     "prefect>=3.7.0",
     "pyarrow>=24.0.0",
     "requests>=2.34.2",
+    "xmltodict>=1.0.4",
 ]
