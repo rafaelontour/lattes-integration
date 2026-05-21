@@ -2,10 +2,12 @@ import requests
 import polars as pl
 import os
 import pyarrow.parquet as pq
+import pytz
 from datetime import datetime
 from pathlib import Path
-import pytz
 from dotenv import load_dotenv
+from collections import defaultdict
+from deep_translator import GoogleTranslator
 
 BASE_URL = "https://api.openalex.org"
 
@@ -180,3 +182,36 @@ def get_sao_paulo_datetime():
     br_dt = utc_dt.astimezone(timezone)
     br_dt = br_dt.replace(tzinfo=None)
     return br_dt
+
+def join_abstract_indexes_and_translate(abstract_dict: dict) -> str:
+
+    # Descobrir o maior índice
+    max_position = max(
+        position
+        for positions in abstract_dict.values()
+        for position in positions
+    )
+
+    # Criar lista vazia com tamanho suficiente
+    words = [""] * (max_position + 1)
+
+    # Preencher cada posição com sua palavra
+    for word, positions in abstract_dict.items():
+        for pos in positions:
+            words[pos] = word
+
+    # Juntar tudo em um texto
+    abstract = " ".join(words)
+
+    print("Resumo reconstruído:\n")
+    print(abstract)
+
+    translated = GoogleTranslator(
+        source='en',
+        target='pt'
+    ).translate(abstract)
+
+    print("\nTexto traduzido:\n")
+    print(translated)
+
+    return translated
