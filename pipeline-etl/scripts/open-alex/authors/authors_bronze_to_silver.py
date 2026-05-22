@@ -28,6 +28,7 @@ class AuthorsBronzeToSilver:
         )
 
         self.rename_columns_mapping = {
+            "openalex_id": "openalex_id",
             "orcid": "orcid_id",
             "h_index": "h_index",
             "i10_index": "i10_index",
@@ -45,6 +46,15 @@ class AuthorsBronzeToSilver:
         sp_date = get_sao_paulo_datetime()
         df = df.with_columns(pl.lit(sp_date).alias("updated_at"))
         return df
+    
+    def extract_only_open_alex_id(self, df: pl.DataFrame):
+        df = df.with_columns(pl.col("id")
+            .str.split("/")
+            .list.last()
+            .alias("openalex_id")                     
+        )
+        
+        return df
 
     def execute(self):
         parquet_file_name = list(self.bronze_read_path.glob("authors*.parquet"))
@@ -56,11 +66,12 @@ class AuthorsBronzeToSilver:
 
         if df_bronze.height > 0:
             df = self.unnest_summary_stats_to_get_indexs(df_bronze)
+            df = self.extract_only_open_alex_id(df)
             df = select_and_rename_polars_columns(df, self.rename_columns_mapping)
             df = self.transform_updated_at_column(df)
 
             save_parquet_into_data_storage(df, self.silver_path, self.execution_date_str, self.entity)
-            return 0
+            return df
         else:
             print("The authors parquet file in the bronze path is empty.")
             return None
