@@ -23,7 +23,7 @@ class AuthorsApiToBronze:
         )
         self.bronze_pesquisadores_path = build_data_storage_path(
             medallion_layer="01-bronze",
-            date=self.execution_date_str,
+            date='17052026',
             source_name="lattes",
             entity="pesquisadores",
         )
@@ -57,7 +57,7 @@ class AuthorsApiToBronze:
         
         params = {"per_page": 50,
                   "filter": f"orcid:{'|'.join(orcid_list)}",
-                  "select": "orcid, display_name, full_name, works_count, cited_by_count, summary_stats, updated_date, works_api_url"}
+                  "select": "id, orcid, display_name, full_name, works_count, cited_by_count, summary_stats, updated_date, works_api_url"}
         
         data = self.fetch_authors_by_orcid(params)
         
@@ -66,7 +66,7 @@ class AuthorsApiToBronze:
             print(self.bronze_write_path)
             save_parquet_into_data_storage(df, self.bronze_write_path, self.execution_date_str, "authors")
             print('Data fetched and saved successfully.')
-            return 0
+            return df
         else:
             print("No data fetched from OpenAlex API - Authors.")
             return None
