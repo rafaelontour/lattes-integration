@@ -30,10 +30,10 @@ class AuthorsBronzeToSilver:
         self.rename_columns_mapping = {
             "openalex_id": "openalex_id",
             "orcid": "orcid_id",
-            "h_index": "h_index",
-            "i10_index": "i10_index",
-            "works_count": "works_count",
-            "cited_by_count": "cited_by_count",
+            "h_index": "indice_h",
+            "i10_index": "indice_i10",
+            "works_count": "qtd_producoes",
+            "cited_by_count": "qtd_citacoes_pesquisador",
             "works_api_url": "works_api_url",
             "updated_date": "updated_at"
         }
